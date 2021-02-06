@@ -18,7 +18,7 @@ class ViewController: UITableViewController {
         child.view.frame = self.view.frame
         view.addSubview(child.view)
         child.didMove(toParent: self)
-        
+        title = "Movie"
         getMovies()
     }
     
