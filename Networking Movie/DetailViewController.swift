@@ -11,15 +11,23 @@ class DetailViewController: UIViewController {
 
     @IBOutlet weak var webView: WKWebView!
     @IBOutlet weak var descriptionLabel: UILabel!
-    
+    let child = SpinnerViewController()
     var movieId: Int = 0
     var movieTitle: String = ""
     var movieDescription: String = ""
     var favMovies: [String] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+//        индикатор загрузки в этой странице можно проверить отключив интернет после прогрузки tableView
+//        на главной странице
+        addChild(child)
+        child.view.frame = view.frame
+        view.addSubview(child.view)
+        child.didMove(toParent: self)
+        
         getMovieDetails()
-        descriptionLabel.text = movieDescription
+        
         
         let button = UIBarButtonItem(image: UIImage(systemName: "star"), style: .plain, target: self, action: #selector(addToFav))
         self.navigationItem.rightBarButtonItem = button
@@ -27,14 +35,22 @@ class DetailViewController: UIViewController {
         favMovies = UserDefaults.standard.stringArray(forKey: "Movie") ?? []
         favMovies.forEach({
             if movieTitle == $0{
-                button.image = UIImage(systemName: "star.filled")
+                button.image = UIImage(systemName: "star.fill")
+                button.action = #selector(removeFromFav)
             }
         })
     }
-    @objc func addToFav(){
+    @objc func removeFromFav(_ sender: UIBarButtonItem){
+        let farray = favMovies.filter {$0 != movieTitle}
+        UserDefaults.standard.setValue(farray, forKey: "Movie")
+        sender.image = UIImage(systemName: "star")
+        sender.action = #selector(addToFav)
+    }
+    @objc func addToFav(_ sender: UIBarButtonItem){
         favMovies.append(movieTitle)
         UserDefaults.standard.setValue(favMovies, forKey: "Movie")
-        
+        sender.image = UIImage(systemName: "star.fill")
+        sender.action = #selector(removeFromFav)
     }
     
     func getMovieDetails() {
@@ -52,7 +68,6 @@ class DetailViewController: UIViewController {
                 print(#function, "error", error.localizedDescription)
                 return
             }
-            
             guard let data = rawdata,
                   let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any]
             else{
@@ -66,7 +81,11 @@ class DetailViewController: UIViewController {
             }
            
             DispatchQueue.main.async {
+                self.descriptionLabel.text = self.movieDescription
                 self.playVideo(key)
+                self.child.willMove(toParent: nil)
+                self.child.view.removeFromSuperview()
+                self.child.removeFromParent()
             }
         }.resume()
     }

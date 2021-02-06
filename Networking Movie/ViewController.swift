@@ -8,11 +8,16 @@
 import UIKit
 
 class ViewController: UITableViewController {
-
     var movies: [Movie ] = []
+    let child = SpinnerViewController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        addChild(child)
+        child.view.frame = self.view.frame
+        view.addSubview(child.view)
+        child.didMove(toParent: self)
         
         getMovies()
     }
@@ -28,8 +33,20 @@ class ViewController: UITableViewController {
         let session = URLSession.shared
         session.dataTask(with: request){
             rawdata, response, error in
-            
+//            можно проверить при отключений интернета
             if let error = error{
+//                чтобы вывести мой alert с ошибкой нужно отключать spinner
+                DispatchQueue.main.async {
+                    self.child.willMove(toParent: nil)
+                    self.child.view.removeFromSuperview()
+                    self.child.removeFromParent()
+                    
+                    let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+//                    я не стала скрывать tableView так как ViewController имплементирует UITableViewController
+//                    self.tableView.isHidden = true
+                }
                 print(#function, "error", error.localizedDescription)
                 return
             }
@@ -37,11 +54,26 @@ class ViewController: UITableViewController {
             guard let data = rawdata,
                   let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any]
             else{
+                DispatchQueue.main.async {
+                    self.child.willMove(toParent: nil)
+                    self.child.view.removeFromSuperview()
+                    self.child.removeFromParent()
+                    let alert = UIAlertController(title: "Error", message: String(describing: rawdata), preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                }
                 print(#function, "error", "\(String(describing: rawdata))")
                 return
             }
-            
             guard let moviesJSON = json["results"] as? [[String : Any]] else {
+                DispatchQueue.main.async {
+                    self.child.willMove(toParent: nil)
+                    self.child.view.removeFromSuperview()
+                    self.child.removeFromParent()
+                    let alert = UIAlertController(title: "Error", message: String(describing: rawdata), preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                }
                 return
             }
             for movie in moviesJSON{
@@ -52,17 +84,31 @@ class ViewController: UITableViewController {
                     print("Error")
                 }
             }
+            
             DispatchQueue.main.async {
                 self.tableView.reloadData()
+                self.child.willMove(toParent: nil)
+                self.child.view.removeFromSuperview()
+                self.child.removeFromParent()
+                
+                if self.movies.isEmpty {
+                    let alert = UIAlertController(title: "Error", message: "There is no data", preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                    self.child.willMove(toParent: nil)
+                    self.child.view.removeFromSuperview()
+                    self.child.removeFromParent()
+                }
             }
+            
         }.resume()
     }
-   
+    
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         movies.count
     }
-   
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MovieCell") as! MovieTableViewCell
         cell.dateLabel.text = movies[indexPath.row].date
@@ -94,7 +140,7 @@ class ViewController: UITableViewController {
     }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let main = UIStoryboard(name: "Main", bundle: nil)
-        guard let detailVC = main.instantiateViewController(identifier: "detailVC") as? DetailViewController else {return}
+        guard let detailVC = main.instantiateViewController(identifier: "detailVC") as? DetailViewController else  { return }
         detailVC.movieTitle = movies[indexPath.row].name
         detailVC.movieId = movies[indexPath.row].id
         detailVC.movieDescription = movies[indexPath.row].overview

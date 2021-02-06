@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E401968E25CE836500293658 /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E401968D25CE836500293658 /* SpinnerViewController.swift */; };
 		E4F2CB5325CDCE63005C9276 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F2CB5225CDCE63005C9276 /* AppDelegate.swift */; };
 		E4F2CB5525CDCE63005C9276 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F2CB5425CDCE63005C9276 /* SceneDelegate.swift */; };
 		E4F2CB5725CDCE63005C9276 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F2CB5625CDCE63005C9276 /* ViewController.swift */; };
@@ -21,6 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E401968D25CE836500293658 /* SpinnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerViewController.swift; sourceTree = "<group>"; };
 		E4F2CB4F25CDCE63005C9276 /* Networking Movie.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Networking Movie.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4F2CB5225CDCE63005C9276 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E4F2CB5425CDCE63005C9276 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -66,6 +68,7 @@
 		E4F2CB5125CDCE63005C9276 /* Networking Movie */ = {
 			isa = PBXGroup;
 			children = (
+				E401968D25CE836500293658 /* SpinnerViewController.swift */,
 				E4F2CB7525CDE282005C9276 /* FavouriteTableViewCell.swift */,
 				E4F2CB7225CDE255005C9276 /* FavouritesTableViewController.swift */,
 				E4F2CB5225CDCE63005C9276 /* AppDelegate.swift */,
@@ -159,6 +162,7 @@
 				E4F2CB5525CDCE63005C9276 /* SceneDelegate.swift in Sources */,
 				E4F2CB6C25CDD0FF005C9276 /* Movie.swift in Sources */,
 				E4F2CB7325CDE255005C9276 /* FavouritesTableViewController.swift in Sources */,
+				E401968E25CE836500293658 /* SpinnerViewController.swift in Sources */,
 				E4F2CB7625CDE282005C9276 /* FavouriteTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
